@@ -4,4 +4,4 @@ class Compromisso:
         self.nome = nome
         self.horas = horas
         self.prioridade = prioridade
-        self.continuo = True if continuo == '/' else False
+        self.continuo = False if continuo == '/' else True
