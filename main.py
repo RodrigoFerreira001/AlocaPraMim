@@ -6,14 +6,14 @@ source = open(sys.argv[1])
 grade = []
 compromissos = []
 
-for i in range(11):
+for i in range(15):
     line = source.readline()
     dias = line.strip('\n').split('\t')
     grade.append(dias)
 
 for line in source.readlines():
     tmp = line.strip('\n').split(';')
-    # print tmp
+    print tmp
     c = Compromisso(int(tmp[0]),tmp[1],int(tmp[2]),int(tmp[3]), tmp[4])
     # '1;tp rv;2;0;/'
     compromissos.append(c)
@@ -23,6 +23,6 @@ for line in source.readlines():
 # print "grade \n\n",grade,"\n\n grade"
 
 
-teste = AG(6, 11, compromissos = compromissos, grade = grade, mutacao_chance = 0.2, geracoes = 100)
+teste = AG(6, 15, compromissos = compromissos, grade = grade, mutacao_chance = 0.2, geracoes = 100)
 # teste.print_semana()
 teste.run()

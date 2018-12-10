@@ -44,7 +44,7 @@ class AG:
 
         # sortear horarios da semana para marcar
         for semana in self.populacao:
-            compromissoAlocados = self.get_compromissos(compromissos,horasDisponiveis)
+            compromissoAlocados = self.get_compromissos(compromissos,horasDisponiveis,horasParaAlocar)
             print [i.id for i in compromissoAlocados]
             for c in compromissoAlocados:
                 horarios = []
@@ -65,27 +65,36 @@ class AG:
         self.populacao = temp[:]
         # print self.populacao
 
-    def get_compromissos(self, compromissos, horasDisponiveis):
+    def get_compromissos(self, compromissos, horasDisponiveis,horasParaAlocar):
 
         h = 0
         compromissoAlocados = []
 
         temp = sorted(compromissos,key = lambda X:X.prioridade, reverse = True)
+        # temp = compromissos
 
-        while h < horasDisponiveis:
+        if horasParaAlocar <= horasDisponiveis:
+            return temp
 
-            c = random.sample(temp,1)[0]
-            # print "**--**"*10
-            # print c,c.horas,c.nome
-            if c not in compromissoAlocados:
-                h += c.horas
-                compromissoAlocados.append(c)
+        else:
 
-        # print h
-        if h > horasDisponiveis:
-            compromissoAlocados = compromissoAlocados[:-1]
-        # print [c.id for c in compromissoAlocados]
-        return compromissoAlocados
+            while h < horasDisponiveis:
+
+                c = random.sample(temp,1)[0]
+                # print c.id
+                # print "**--**"*10
+                # print c,c.horas,c.nome
+                print h,horasDisponiveis
+                if c not in compromissoAlocados:
+                    print 'add novo',c.id
+                    h += c.horas
+                    compromissoAlocados.append(c)
+
+            # print h
+            if h > horasDisponiveis:
+                compromissoAlocados = compromissoAlocados[:-1]
+            # print [c.id for c in compromissoAlocados]
+            return compromissoAlocados
 
 
     def print_semana(self):
@@ -375,7 +384,18 @@ class AG:
             #     self.best = sorted(self.populacao,key = lambda X:X[1])[-1]
 
         self.print_semana()
-        print [c[1] for c in self.best]
+        x =  [c[1] for c in self.best]
+        t = range(self.geracoes)
+        print sorted(x)
         # self.mutacao(self.populacao[0])
         # print self.grade
 #  --------------------------------------------------------
+
+        # import matplotlib.pyplot as plt
+        #
+        # plt.plot(x, y)
+
+        import matplotlib.pyplot as plt
+        plt.plot([1,2,3,4])
+        plt.ylabel('some numbers')
+        plt.show()
