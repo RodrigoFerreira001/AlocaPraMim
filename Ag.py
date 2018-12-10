@@ -13,7 +13,7 @@ class AG:
 
         horasDisponiveis = sum([1 for i in grade for j in i if j=='0'])
 
-        print [c.nome for c in compromissos],"horas Para Alocar",horasParaAlocar,'horas Disponiveis na semana',horasDisponiveis
+        print "horas Para Alocar",horasParaAlocar,'horas Disponiveis na semana',horasDisponiveis
 
         # grade transposta para que linhas = horas colunas = dias
         self.geracoes = geracoes
@@ -24,7 +24,8 @@ class AG:
         self.tam_populacao = tam_populacao
         self.compromissos = compromissos
 
-        self.best = [0,0.0]
+        self.best = []
+        self.best.append([0,0.0])
 
         # semana = [[dia],[dia],[dia],[dia],[dia]]
         # dia = [15 horas (8 as 23)], depende de num_horas_do_dia considerado
@@ -109,17 +110,21 @@ class AG:
         print 'MELHOR SOLUCAO'
         s = max(self.populacao, key = lambda X:X[1])
 
+        dt = {c.id : c.nome for c in self.compromissos}
+        dt[0] = '-'*10
+
         print "fit",s[1]
+        # print dt
         temp = []
-        print "seg  ter  qua  qui  sex"
+        # "+" "*5+"
+        print "seg"+" "*14+"ter"+" "*14+"qua"+" "*14+"qui"+" "*14+"sex"
         print "\n"
 
-        # print s[0]
-        # print s[0][1][0]
+
 
         for i in range(self.num_horas_do_dia):
             for dia in s[0]:
-                print dia[i],"\t",
+                print dt[dia[i]]+' '*(10-len(dt[dia[i]]))+'\t',
 
             print '\n'
 
@@ -147,7 +152,7 @@ class AG:
             p = sorted(p , key = lambda X:X[1], reverse = True)
             pai1 = p[0]
             pai2 = p[1]
-            print 'escolhidos', pai1[1], pai2[1]
+            # print 'escolhidos', pai1[1], pai2[1]
 
             #  coletando compromissos unicos de cada grade
             temp = []
@@ -158,7 +163,7 @@ class AG:
                     if pai2[0][i][j] != 0 and pai2[0][i][j] not in temp:
                         temp.append(pai2[0][i][j])
 
-            print 'TEMP' , temp
+            # print 'TEMP' , temp
 
             # escrevedo primeira metade dos compromissos
             for i,dia in enumerate(pai1[0]):
@@ -239,9 +244,9 @@ class AG:
         # print "f2",f2,"\n\n"
 
 
-        print "nova pop gerada"
+        # print "nova pop gerada"
         self.populacao = new_pop[:]
-        print  self.populacao
+        # print  self.populacao
 
 
         # print '--'*20,temp[:len(temp)/2],temp[len(temp)/2:]
@@ -274,9 +279,9 @@ class AG:
                 # print "compromisso mutado:",compromissoMutado.id,compromissoMutado.nome,compromissoMutado.horas
 
                 novoHorario = []
-                print'antes do while :'
-                print semana
-                print '\n\n'
+                # print'antes do while :'
+                # print semana
+                # print '\n\n'
                 while len(novoHorario) < compromissoMutado.horas:
                     temp = (random.randint(0,4),random.randint(0,self.num_horas_do_dia-1))
 
@@ -340,9 +345,11 @@ class AG:
 
             a = sum([c.prioridade for c in self.compromissos if c.id in compromissosAlocados])
             h = sum([c.horas for c in self.compromissos if c.id in compromissosAlocados])
-            print 'a',a,'penalidade',a * penalidade
+            print 'soma das prioridades',a,'soma das horas',h,'penalidade m1:',a * penalidade,'m2:',1+penalidade
             semana[1] = (a+h - (a * penalidade))
-            # semana[1] = a - (a * penalidade)
+            # semana[1] = 1 / (1 + penalidade)
+
+
 
     def run(self):
         cont = 0
@@ -350,6 +357,8 @@ class AG:
             print "GERACAO     ",cont
 
             self.fitness()
+            
+            self.best.append(max(self.populacao, key = lambda X:X[1]))
 
             self.crossover()
 
@@ -357,10 +366,13 @@ class AG:
 
             cont += 1
 
+        self.fitness()
+
             # for _ in range(self.geracoes):
             #     self.best = sorted(self.populacao,key = lambda X:X[1])[-1]
 
         self.print_semana()
+        print [c[1] for c in self.best]
         # self.mutacao(self.populacao[0])
         # print self.grade
 #  --------------------------------------------------------
