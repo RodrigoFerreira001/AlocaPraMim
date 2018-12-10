@@ -148,10 +148,13 @@ class AG:
             # print "F1",len(f1),len(f1[0])
             # print "F2",len(f2),len(f2[0])
 
-            p = random.sample(self.populacao, 4)
-            p = sorted(p , key = lambda X:X[1], reverse = True)
-            pai1 = p[0]
-            pai2 = p[1]
+            p = random.sample(self.populacao, 2)
+            pai1 = max(p,key = lambda X:X[1])
+
+            p = random.sample(self.populacao, 2)
+            pai2 = max(p,key = lambda X:X[1])
+            # p = sorted(p , key = lambda X:X[1], reverse = True)
+            # pai2 = p[1]
             # print 'escolhidos', pai1[1], pai2[1]
 
             #  coletando compromissos unicos de cada grade
@@ -357,7 +360,7 @@ class AG:
             print "GERACAO     ",cont
 
             self.fitness()
-            
+
             self.best.append(max(self.populacao, key = lambda X:X[1]))
 
             self.crossover()
