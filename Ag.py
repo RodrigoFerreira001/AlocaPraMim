@@ -84,9 +84,9 @@ class AG:
                 # print c.id
                 # print "**--**"*10
                 # print c,c.horas,c.nome
-                print h,horasDisponiveis
+                # print h,horasDisponiveis
                 if c not in compromissoAlocados:
-                    print 'add novo',c.id
+                    # print 'add novo',c.id
                     h += c.horas
                     compromissoAlocados.append(c)
 
@@ -386,7 +386,6 @@ class AG:
         self.print_semana()
         x =  [c[1] for c in self.best]
         t = range(self.geracoes)
-        print sorted(x)
         # self.mutacao(self.populacao[0])
         # print self.grade
 #  --------------------------------------------------------
@@ -395,7 +394,5 @@ class AG:
         #
         # plt.plot(x, y)
 
-        import matplotlib.pyplot as plt
-        plt.plot([1,2,3,4])
-        plt.ylabel('some numbers')
-        plt.show()
+        # plt.show()
+        return sorted(x)
