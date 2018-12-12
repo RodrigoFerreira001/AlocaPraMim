@@ -26,5 +26,5 @@
 11;++choro;3;1;/
 12;+++choro;4;1;/
 13;Carol_me_passa;5;2;/
-14;+choro;3;1;/
-15;+choro;4;1;/
+14;banho;3;1;/
+15;+-choro;4;1;/

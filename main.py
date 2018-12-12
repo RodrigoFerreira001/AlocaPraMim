@@ -18,12 +18,13 @@ for line in source.readlines():
     # '1;tp rv;2;0;/'
     compromissos.append(c)
 
-# for compromisso in compromissos:
-#     print compromisso.id, compromisso.nome, compromisso.horas, compromisso.prioridade, compromisso.continuo
-# print "grade \n\n",grade,"\n\n grade"
+populacao = int(sys.argv[2])
+mutacao_chance = float(sys.argv[3])
+geracoes = int(sys.argv[4])
 
+print 'populacao', populacao ,'mutacao_chance', mutacao_chance ,'geracoes', geracoes
 
-# teste = AG(30, 15, compromissos = compromissos, grade = grade, mutacao_chance = 0.2, geracoes = 1000)
+# teste = AG(tam_populacao = populacao, num_horas_do_dia = 15, compromissos = compromissos, grade = grade, mutacao_chance = mutacao_chance, geracoes = geracoes)
 # # teste.print_semana()
 # teste.run()
 
@@ -32,12 +33,17 @@ import pandas as pd
 
 r = {}
 for i in range(10):
-    teste = AG(10, 15, compromissos = compromissos, grade = grade, mutacao_chance = 0.1, geracoes = 1000)
+    teste = AG(tam_populacao = populacao, num_horas_do_dia = 15, compromissos = compromissos, grade = grade, mutacao_chance = mutacao_chance, geracoes = geracoes)
     r[i] = teste.run()
 # for i in r.keys():
 #     print i,len(r[i])
 
 df = pd.DataFrame(r)
 df['average'] = df[df.columns].sum(numeric_only=True, axis=1)/len(df.columns)
+
+nome = sys.argv[1].split('.')[0]+'_'+sys.argv[2]+'_'+sys.argv[3]+'_'+sys.argv[4]
+
+print 'CSV CRIADO ',nome
 print df.describe()
-df.to_csv('media_10ind-10porc-maiorQTotal.csv')
+
+df.to_csv(nome+'.csv')
