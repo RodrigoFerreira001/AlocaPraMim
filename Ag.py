@@ -7,13 +7,11 @@ class AG:
     def __init__(self, tam_populacao, num_horas_do_dia, compromissos, grade, geracoes, mutacao_chance):
 
 
-        print "recebi: "
-
         horasParaAlocar = sum([c.horas for c in compromissos])
 
         horasDisponiveis = sum([1 for i in grade for j in i if j=='0'])
 
-        print "horas Para Alocar",horasParaAlocar,'horas Disponiveis na semana',horasDisponiveis
+        print "horas Para Alocar",horasParaAlocar,'. Horas disponiveis na semana',horasDisponiveis
 
         # grade transposta para que linhas = horas colunas = dias
         self.geracoes = geracoes
@@ -63,15 +61,14 @@ class AG:
 
 
         self.populacao = temp[:]
-        # print self.populacao
 
     def get_compromissos(self, compromissos, horasDisponiveis,horasParaAlocar):
-
+        # verifica se ha mais compromissos do que horas disponiveis
+        # e retorna uma lista de compromisssos para alocar
         h = 0
         compromissoAlocados = []
 
         temp = sorted(compromissos,key = lambda X:X.prioridade, reverse = True)
-        # temp = compromissos
 
         if horasParaAlocar <= horasDisponiveis:
             return temp
@@ -98,6 +95,7 @@ class AG:
 
 
     def print_semana(self):
+        # print da população
         for semana in self.populacao:
             # print "individuo \n\n"
             print "fit",semana[1]
@@ -140,6 +138,8 @@ class AG:
 
 
     def crossover(self):
+        # cada filho recebe metade dos seus compromissos de acordo com cada pai
+
         # Inicializar filhos
         # 5 = dias da semana seg a sex
         new_pop = []
@@ -152,19 +152,12 @@ class AG:
                 f1.append([0]*self.num_horas_do_dia)
                 f2.append([0]*self.num_horas_do_dia)
 
-            # print '___'*10
-            # print 'antes',self.num_horas_do_dia
-            # print "F1",len(f1),len(f1[0])
-            # print "F2",len(f2),len(f2[0])
-
             p = random.sample(self.populacao, 2)
             pai1 = max(p,key = lambda X:X[1])
 
             p = random.sample(self.populacao, 2)
             pai2 = max(p,key = lambda X:X[1])
-            # p = sorted(p , key = lambda X:X[1], reverse = True)
-            # pai2 = p[1]
-            # print 'escolhidos', pai1[1], pai2[1]
+
 
             #  coletando compromissos unicos de cada grade
             temp = []
@@ -175,7 +168,6 @@ class AG:
                     if pai2[0][i][j] != 0 and pai2[0][i][j] not in temp:
                         temp.append(pai2[0][i][j])
 
-            # print 'TEMP' , temp
 
             # escrevedo primeira metade dos compromissos
             for i,dia in enumerate(pai1[0]):
@@ -193,12 +185,6 @@ class AG:
                     if pai2[0][i][j] in temp[:len(temp)/2]:
                         # print '--'*10
                         f2[i][j] = pai2[0][i][j]
-                        # print pai1
-                        # print "\n\n",f1
-            # print'PRIMEIRA METADE DOS FILHOS'
-            # print 'f1:',f1
-            # print '\n\n f2:',f2
-            #
 
             # escrevedo segunda metade dos compromissos
             for i,dia in enumerate(pai1[0]):
@@ -236,11 +222,6 @@ class AG:
                                         f1[k][l] = pai2[0][i][j]
                                         flag = 1
 
-            # print "__*__"*10
-            # print "Depois"
-            # print '\n'
-            # print "F1",len(f1),len(f1[0])
-            # print "F2",len(f2),len(f2[0])
 
             new_pop.append([f1,0.0])
             new_pop.append([f2,0.0])
@@ -260,9 +241,6 @@ class AG:
         self.populacao = new_pop[:]
         # print  self.populacao
 
-
-        # print '--'*20,temp[:len(temp)/2],temp[len(temp)/2:]
-        # print pai1,"\n\n",pai2,"\n\n", f2
 
 
     def mutacao(self):
@@ -313,7 +291,7 @@ class AG:
 
                 # print "MUTADO\n\n"
                 # print semana
-                print "mutacao OK"
+                # print "mutacao OK"
                 # return semana
 
 
@@ -348,19 +326,13 @@ class AG:
                     if semana[0][i][j] != 0 and semana[0][i][j] not in compromissosAlocados:
                         compromissosAlocados.append(semana[0][i][j])
 
-            # print 'calc fit'
-            # print [c.prioridade for c in self.compromissos if c.id in compromissosAlocados]
-            # print [c.id for c in self.compromissos if c.id in compromissosAlocados]
-            # print sum([c.prioridade for c in self.compromissos if c.id in compromissosAlocados])
-
-            #  fit = soma das prioridades / pelas penalidades
-
             a = sum([c.prioridade for c in self.compromissos if c.id in compromissosAlocados])
             h = sum([c.horas for c in self.compromissos if c.id in compromissosAlocados])
-            print 'soma das prioridades',a,'soma das horas',h,'penalidade m1:',a * penalidade,'m2:',1+penalidade
-            semana[1] = (a+h - (a * penalidade))
-            # semana[1] = 1 / (1 + penalidade)
+            # print 'soma das prioridades',a,'soma das horas',h,'penalidade m1:',a * penalidade,'m2:',1+penalidade
 
+            #  funcao de penalidade
+            #  fit = soma das prioridades + soma das horas alocadas - (soma das prioridades * penalidades)
+            semana[1] = (a+h - (a * penalidade))
 
 
     def run(self):
@@ -386,13 +358,5 @@ class AG:
         self.print_semana()
         x =  [c[1] for c in self.best]
         t = range(self.geracoes)
-        # self.mutacao(self.populacao[0])
-        # print self.grade
-#  --------------------------------------------------------
 
-        # import matplotlib.pyplot as plt
-        #
-        # plt.plot(x, y)
-
-        # plt.show()
         return sorted(x)
